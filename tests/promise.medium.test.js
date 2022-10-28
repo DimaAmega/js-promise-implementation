@@ -2,13 +2,13 @@ import PROMISE_STATES from '../src/configs/promise-states'
 import PromiseImpl from '../src'
 
 test('Promise have to invoke callback immediately', async () => {
-  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+  const sleepGood = ms => new Promise(resolve => setTimeout(resolve, ms))
 
   const delay = 100
   const promise = new PromiseImpl(resolve => setTimeout(resolve, delay, delay))
   expect(promise.state).toBe(PROMISE_STATES.Pending)
 
-  await sleep(delay)
+  await sleepGood(delay)
   expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
   expect(promise.value).toBe(delay)
 })
