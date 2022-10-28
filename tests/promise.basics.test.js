@@ -1,6 +1,6 @@
 import ERRORS from '../src/configs/errors'
 import PROMISE_STATES from '../src/configs/promise-states'
-import Promise from '../src/'
+import Promise from '../src'
 
 test('Promise have to throw exception if callback missed', () => {
   expect(() => new Promise()).toThrow(ERRORS.missedCallback)
