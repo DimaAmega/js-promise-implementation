@@ -93,4 +93,27 @@ export default () =>
     catch(onRejectedCb) {
       return this.then(null, onRejectedCb)
     }
+
+    finally(cb) {
+      const throwError = error => {
+        throw error
+      }
+
+      return this.then(
+        value => {
+          const cbResult = cb()
+          if (cbResult instanceof Promise) {
+            return cbResult.then(() => value, throwError)
+          }
+          return value
+        },
+        error => {
+          const cbResult = cb()
+          if (cbResult instanceof Promise) {
+            return cbResult.then(() => throwError(error), throwError)
+          }
+          throw error
+        },
+      )
+    }
   }
