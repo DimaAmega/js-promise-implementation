@@ -53,9 +53,9 @@ test('Promise sync invoke then and rejected', () => {
 
 test('Promise async invoke then and fulfilled', done => {
   const delay = 100
+  const startTime = new Date()
   const promise = new PromiseImpl(resolve => setTimeout(resolve, delay, delay))
   expect(promise.state).toBe(PROMISE_STATES.Pending)
-  const startTime = new Date()
 
   const newPromise = promise.then(value => value)
   expect(newPromise.state).toBe(PROMISE_STATES.Pending)
