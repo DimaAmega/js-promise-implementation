@@ -43,7 +43,7 @@ test('Promise with no async cb but with explicit exception have \
 
 test('Promise with no async cb have to be in fulfilled state\
       with specific value', () => {
-  const values = [123, 'string', {}, []]
+  const values = [12, 'string', {}, []]
   values.forEach(value => {
     const promise = new Promise(resolve => resolve(value))
     expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
