@@ -51,6 +51,22 @@ test('Promise sync invoke then and rejected', () => {
   expect(newPromise.error).toBe(undefined)
 })
 
+test('Promise sync invoke then and rejected but onRejected callback missed', () => {
+  const initialError = new Error('error')
+  const promise = new PromiseImpl((resolve, reject) => reject(initialError))
+  expect(promise.state).toBe(PROMISE_STATES.Rejected)
+  expect(promise.value).toBe(undefined)
+  expect(promise.error).toBe(initialError)
+
+  let isOnFulfilledInvoked = false
+  const newPromise = promise.then(() => (isOnFulfilledInvoked = true))
+
+  expect(isOnFulfilledInvoked).toBe(false)
+  expect(newPromise.state).toBe(PROMISE_STATES.Rejected)
+  expect(newPromise.value).toBe(undefined)
+  expect(newPromise.error).toBe(initialError)
+})
+
 test('Promise async invoke then and fulfilled', done => {
   const delay = 100
   const startTime = new Date()
