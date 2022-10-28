@@ -23,9 +23,8 @@ export default () =>
           return
         case PROMISE_STATES.Fulfilled:
         case PROMISE_STATES.Rejected:
-          while (this.waiters.length) {
-            const { onFulfilledCb, resolve, onRejectedCb, reject } =
-              this.waiters.shift()
+          for (const waiter of this.waiters) {
+            const { onFulfilledCb, resolve, onRejectedCb, reject } = waiter
 
             let [value, cb] = Array(2).fill()
 
@@ -65,6 +64,7 @@ export default () =>
               resolve(clearValue)
             }
           }
+          this.waiters = []
           break
         default:
           throw new Error(ERRORS.unknownStage)
