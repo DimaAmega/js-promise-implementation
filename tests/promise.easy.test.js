@@ -14,9 +14,9 @@ test('Promise have to invoke callback with two args', () => {
 })
 
 test('Promise with no async cb have to be in fulfilled state', () => {
-  const promise = new Promise(resolve => resolve())
+  const promise = new Promise(resolve => resolve(123))
   expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
-  expect(promise.value).toEqual(undefined)
+  expect(promise.value).toEqual(123)
 })
 
 test('Promise with no async cb have to be in rejected state', () => {
@@ -24,6 +24,7 @@ test('Promise with no async cb have to be in rejected state', () => {
   const promise = new Promise((resolve, reject) => reject(error))
   expect(promise.state).toBe(PROMISE_STATES.Rejected)
   expect(promise.error).toBe(error)
+  expect(promise.value).toEqual(undefined)
 })
 
 test('Promise with no async cb but with explicit exception have \
