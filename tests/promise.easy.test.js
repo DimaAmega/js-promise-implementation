@@ -14,14 +14,14 @@ test('Promise have to invoke callback with two args', () => {
 })
 
 test('Promise with no async cb have to be in fulfilled state', () => {
-  const promise = new Promise(resolve => resolve(123))
+  const promise = Promise.resolve(123)
   expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
   expect(promise.value).toEqual(123)
 })
 
 test('Promise with no async cb have to be in rejected state', () => {
   const error = new Error('rejected')
-  const promise = new Promise((resolve, reject) => reject(error))
+  const promise = Promise.reject(error)
   expect(promise.state).toBe(PROMISE_STATES.Rejected)
   expect(promise.error).toBe(error)
   expect(promise.value).toEqual(undefined)
@@ -46,7 +46,7 @@ test('Promise with no async cb have to be in fulfilled state\
       with specific value', () => {
   const values = [12, 'string', {}, []]
   values.forEach(value => {
-    const promise = new Promise(resolve => resolve(value))
+    const promise = Promise.resolve(value)
     expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
     expect(promise.value).toEqual(value)
   })

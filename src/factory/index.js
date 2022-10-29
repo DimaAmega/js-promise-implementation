@@ -3,6 +3,14 @@ import PROMISE_STATES from '../configs/promise-states.js'
 
 export default () =>
   class Promise {
+    static resolve(value) {
+      return new Promise(resolve => resolve(value))
+    }
+
+    static reject(error) {
+      return new Promise((resolve, reject) => reject(error))
+    }
+
     constructor(cb) {
       if (cb == undefined || typeof cb !== 'function') {
         throw new Error(ERRORS.missedCallback)
@@ -15,6 +23,18 @@ export default () =>
       } catch (error) {
         this.#rejectFunction(error)
       }
+    }
+
+    #resolveFunction(value) {
+      this.value = value
+      this.state = PROMISE_STATES.Fulfilled
+      this.#serveWaiters()
+    }
+
+    #rejectFunction(error) {
+      this.error = error
+      this.state = PROMISE_STATES.Rejected
+      this.#serveWaiters()
     }
 
     #serveWaiters() {
@@ -71,18 +91,9 @@ export default () =>
       }
     }
 
-    #resolveFunction(value) {
-      this.value = value
-      this.state = PROMISE_STATES.Fulfilled
-      this.#serveWaiters()
-    }
-
-    #rejectFunction(error) {
-      this.error = error
-      this.state = PROMISE_STATES.Rejected
-      this.#serveWaiters()
-    }
-
+    ///////////////////////
+    //    PUBLIC API
+    ///////////////////////
     then(onFulfilledCb, onRejectedCb) {
       return new Promise((resolve, reject) => {
         this.waiters.push({ onFulfilledCb, onRejectedCb, reject, resolve })

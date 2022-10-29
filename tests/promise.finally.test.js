@@ -4,7 +4,7 @@ import Promise from '../src'
 test('finally sync resolve ignore returned value', () => {
   let isTouched = false
   const value = 77
-  const promise = new Promise(resolve => resolve(value)).finally(() => {
+  const promise = Promise.resolve(value).finally(() => {
     isTouched = true
     return 88
   })
@@ -16,8 +16,8 @@ test('finally sync resolve ignore returned value', () => {
 
 test('finally sync resolve ignore returned promise', () => {
   const value = 77
-  const promise = new Promise(resolve => resolve(value)).finally(() => {
-    return new Promise(resolve => resolve(88))
+  const promise = Promise.resolve(value).finally(() => {
+    return Promise.resolve(88)
   })
 
   expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
@@ -28,12 +28,10 @@ test('finally sync reject ignore returned value', () => {
   let isTouched = false
   const value = 77
   const error = 'error'
-  const promise = new Promise((resolve, reject) => reject(error)).finally(
-    () => {
-      isTouched = true
-      return value
-    },
-  )
+  const promise = Promise.reject(error).finally(() => {
+    isTouched = true
+    return value
+  })
 
   expect(isTouched).toBe(true)
   expect(promise.state).toBe(PROMISE_STATES.Rejected)
@@ -43,11 +41,9 @@ test('finally sync reject ignore returned value', () => {
 
 test('finally sync reject handle new error via throw', () => {
   const [error, error2] = ['error', 'error2']
-  const promise = new Promise((resolve, reject) => reject(error)).finally(
-    () => {
-      throw error2
-    },
-  )
+  const promise = Promise.reject(error).finally(() => {
+    throw error2
+  })
 
   expect(promise.state).toBe(PROMISE_STATES.Rejected)
   expect(promise.error).toBe(error2)
@@ -56,9 +52,7 @@ test('finally sync reject handle new error via throw', () => {
 
 test('finally sync reject handle new error via promise that reject', () => {
   const [error, error2] = ['error', 'error2']
-  const promise = new Promise((resolve, reject) => reject(error)).finally(
-    () => new Promise((resolve, reject) => reject(error2)),
-  )
+  const promise = Promise.reject(error).finally(() => Promise.reject(error2))
 
   expect(promise.state).toBe(PROMISE_STATES.Rejected)
   expect(promise.error).toBe(error2)
