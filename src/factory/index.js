@@ -17,7 +17,7 @@ export default () =>
       }
       this.waiters = []
       this.state = PROMISE_STATES.Pending
-      // invoke te callback
+      // invoke the callback
       try {
         cb(this.#resolveFunction.bind(this), this.#rejectFunction.bind(this))
       } catch (error) {
