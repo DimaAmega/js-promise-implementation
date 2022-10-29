@@ -51,20 +51,18 @@ export default () =>
             if (this.state == PROMISE_STATES.Fulfilled) {
               cb = onFulfilledCb
               value = this.value
+              if (!cb) {
+                resolve(value)
+                continue
+              }
             }
             if (this.state == PROMISE_STATES.Rejected) {
               cb = onRejectedCb
               value = this.error
-            }
-
-            if (!cb) {
-              if (this.state == PROMISE_STATES.Fulfilled) {
-                resolve(this.value)
+              if (!cb) {
+                reject(value)
+                continue
               }
-              if (this.state == PROMISE_STATES.Rejected) {
-                reject(this.error)
-              }
-              continue
             }
 
             let valueOrPromise = undefined
@@ -86,8 +84,6 @@ export default () =>
           }
           this.waiters = []
           break
-        default:
-          throw new Error(ERRORS.unknownStage)
       }
     }
 
