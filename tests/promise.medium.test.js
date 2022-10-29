@@ -78,8 +78,7 @@ test('Promise async invoke then and fulfilled', done => {
 
   newPromise
     .then(value => {
-      const endTime = new Date()
-      expect(endTime - startTime).toBeGreaterThanOrEqual(delay)
+      expect(new Date() - startTime).toBeGreaterThanOrEqual(delay)
 
       expect(value).toBe(delay)
       expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
