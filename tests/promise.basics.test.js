@@ -6,12 +6,10 @@ test('Promise have to throw exception if callback missed', () => {
   expect(() => new Promise()).toThrow(ERRORS.missedCallback)
 })
 
-test('Promise have to throw exception if callback is not a function', () => {
-  expect(() => {
-    const args = ['string', new Error('error'), {}, Number(123), []]
-    args.map(arg => new Promise(arg))
-  }).toThrow(ERRORS.missedCallback)
-})
+test.each(['string', new Error('error'), {}, Number(123), []])(
+  'Promise have to throw exception if callback is %p',
+  arg => expect(() => new Promise(arg)).toThrow(ERRORS.missedCallback),
+)
 
 test('Promise have to not throw exception if callback is passed', () => {
   expect(() => new Promise(() => {})).not.toThrow(ERRORS.missedCallback)
