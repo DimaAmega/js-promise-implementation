@@ -42,12 +42,12 @@ test('Promise with no async cb but with explicit exception have \
   expect(promise.error).toEqual(error)
 })
 
-test('Promise with no async cb have to be in fulfilled state\
-      with specific value', () => {
-  const values = [12, 'string', {}, []]
-  values.forEach(value => {
-    const promise = Promise.resolve(value)
+test.each([12, 'string', {}, [], () => {}])(
+  'Promise with no async cb have to be in fulfilled state \
+with value: %p',
+  value => {
+    const promise = new Promise(resolve => resolve(value))
     expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
     expect(promise.value).toEqual(value)
-  })
-})
+  },
+)
