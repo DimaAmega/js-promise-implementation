@@ -1,60 +1,74 @@
-import PROMISE_STATES from '../src/configs/promise-states'
 import Promise from '../src'
 
-test('finally sync resolve ignore returned value', () => {
+test('finally sync resolve ignore returned value', done => {
   let isTouched = false
-  const value = 77
-  const promise = Promise.resolve(value).finally(() => {
-    isTouched = true
-    return 88
-  })
-
-  expect(isTouched).toBe(true)
-  expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
-  expect(promise.value).toBe(value)
+  const initialValue = 77
+  Promise.resolve(initialValue)
+    .finally(() => {
+      isTouched = true
+      return 88
+    })
+    .then(value => {
+      expect(isTouched).toBe(true)
+      expect(value).toBe(initialValue)
+      done()
+    })
+    .catch(error => done(error))
 })
 
-test('finally sync resolve ignore returned promise', () => {
-  const value = 77
-  const promise = Promise.resolve(value).finally(() => {
-    return Promise.resolve(88)
-  })
-
-  expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
-  expect(promise.value).toBe(value)
+test('finally sync resolve ignore returned promise', done => {
+  const initialValue = 77
+  Promise.resolve(initialValue)
+    .finally(() => {
+      return Promise.resolve(88)
+    })
+    .then(value => {
+      expect(value).toBe(initialValue)
+      done()
+    })
+    .catch(error => done(error))
 })
 
-test('finally sync reject ignore returned value', () => {
+test('finally sync reject ignore returned value', done => {
   let isTouched = false
-  const value = 77
-  const error = 'error'
-  const promise = Promise.reject(error).finally(() => {
-    isTouched = true
-    return value
-  })
-
-  expect(isTouched).toBe(true)
-  expect(promise.state).toBe(PROMISE_STATES.Rejected)
-  expect(promise.error).toBe(error)
-  expect(promise.value).toBe(undefined)
+  const initialValue = 77
+  const initialError = new Error('error')
+  Promise.reject(initialError)
+    .finally(() => {
+      isTouched = true
+      return initialValue
+    })
+    .catch(error => {
+      expect(isTouched).toBe(true)
+      expect(error).toBe(initialError)
+    })
+    .then(value => {
+      expect(value).toBe(undefined)
+      done()
+    })
+    .catch(error => done(error))
 })
 
-test('finally sync reject handle new error via throw', () => {
-  const [error, error2] = ['error', 'error2']
-  const promise = Promise.reject(error).finally(() => {
-    throw error2
-  })
-
-  expect(promise.state).toBe(PROMISE_STATES.Rejected)
-  expect(promise.error).toBe(error2)
-  expect(promise.value).toBe(undefined)
+test('finally sync reject handle new error via throw', done => {
+  const [errorOne, errorTwo] = [new Error('error'), new Error('error2')]
+  Promise.reject(errorOne)
+    .finally(() => {
+      throw errorTwo
+    })
+    .catch(error => {
+      expect(error).toBe(errorTwo)
+      done()
+    })
+    .catch(error => done(error))
 })
 
-test('finally sync reject handle new error via promise that reject', () => {
-  const [error, error2] = ['error', 'error2']
-  const promise = Promise.reject(error).finally(() => Promise.reject(error2))
-
-  expect(promise.state).toBe(PROMISE_STATES.Rejected)
-  expect(promise.error).toBe(error2)
-  expect(promise.value).toBe(undefined)
+test('finally sync reject handle new error via promise that reject', done => {
+  const [errorOne, errorTwo] = [new Error('error'), new Error('error2')]
+  Promise.reject(errorOne)
+    .finally(() => Promise.reject(errorTwo))
+    .catch(error => {
+      expect(error).toBe(errorTwo)
+      done()
+    })
+    .catch(error => done(error))
 })
