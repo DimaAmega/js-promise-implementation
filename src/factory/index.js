@@ -90,6 +90,7 @@ export default () =>
     ///////////////////////
     //    PUBLIC API
     ///////////////////////
+
     then(onFulfilledCb, onRejectedCb) {
       return new Promise((resolve, reject) => {
         this.waiters.push({ onFulfilledCb, onRejectedCb, reject, resolve })
