@@ -93,7 +93,7 @@ export default () =>
     then(onFulfilledCb, onRejectedCb) {
       return new Promise((resolve, reject) => {
         this.waiters.push({ onFulfilledCb, onRejectedCb, reject, resolve })
-        this.#serveWaiters()
+        queueMicrotask(() => this.#serveWaiters())
       })
     }
 
