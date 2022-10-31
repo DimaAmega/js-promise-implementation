@@ -16,6 +16,21 @@ test('finally sync resolve ignore returned value', done => {
     .catch(error => done(error))
 })
 
+test('finally async/await syntax', async () => {
+  let isTouched = false
+  const initialValue = 77
+
+  try {
+    const value = await Promise.resolve(initialValue)
+    expect(value).toBe(initialValue)
+  } catch (error) {
+    throw error
+  } finally {
+    isTouched = true
+  }
+  expect(isTouched).toBe(true)
+})
+
 test('finally sync resolve ignore returned promise', done => {
   const initialValue = 77
   Promise.resolve(initialValue)
