@@ -1,10 +1,10 @@
-import PromiseImpl from '../src'
+import Promise from '../src'
 
 test('Chain rule', done => {
-  const sleepGood = ms =>
-    new PromiseImpl(resolve => setTimeout(resolve, ms, ms))
+  const sleepGood = ms => new Promise(resolve => setTimeout(resolve, ms, ms))
   const startDate = new Date()
   const delay = 10
+
   sleepGood(delay)
     .then(value => {
       expect(value).toBe(delay)
