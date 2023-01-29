@@ -18,6 +18,23 @@ test('Then does not invoked immediately', () => {
   expect(isInvoked).toBe(false)
 })
 
+test('Right order of execution', done => {
+  const ip = []
+
+  ip.push(1)
+
+  Promise.resolve()
+    .then(() => ip.push(3))
+    .then(() => {
+      ip.push(4)
+      expect(ip).toEqual([1, 2, 3, 4])
+      done()
+    })
+    .catch(error => done(error))
+
+  ip.push(2)
+})
+
 test('Then does not invoked immediately, but eventually', done => {
   let isInvoked = false
   Promise.resolve()
