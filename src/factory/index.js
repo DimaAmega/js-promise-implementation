@@ -8,7 +8,7 @@ export default () =>
     }
 
     static reject(error) {
-      return new Promise((_, reject) => reject(error))
+      return new Promise((resolve, reject) => reject(error))
     }
 
     constructor(cb) {
