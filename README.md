@@ -1,6 +1,8 @@
 [![Node.js CI](https://github.com/DimaAmega/js-promise-implementation/actions/workflows/tests.js.yml/badge.svg)](https://github.com/DimaAmega/js-promise-implementation/actions/workflows/tests.js.yml)
 [![codecov](https://codecov.io/gh/DimaAmega/js-promise-implementation/branch/master/graph/badge.svg?token=CN0U5HMU0N)](https://codecov.io/gh/DimaAmega/js-promise-implementation)
 
+[![Open in Codeflow](https://developer.stackblitz.com/img/open_in_codeflow.svg)](https:///pr.new/DimaAmega/js-promise-implementation)
+
 # js-promise-implementation
 
 Custom js promise implementation
