@@ -10,7 +10,7 @@ Custom js promise implementation
 You can use the tool much better if you know how it works. Because of this, I decided to write a custom implementation of promise. Promise is the most frequently used feature in javascript (i think so)
 
 ## Get started
-To onstall deps:
+To install deps:
 ```shell
 yarn install 
 ```
