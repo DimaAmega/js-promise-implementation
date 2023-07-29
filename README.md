@@ -5,7 +5,7 @@
 
 # js-promise-implementation
 
-Custom js promise implementation
+implementation of promises in js
 
 ## Motivation
 
