@@ -11,6 +11,9 @@ implementation of promises in js
 
 You can use the tool much better if you know how it works. Because of this, I decided to write a custom implementation of promise. Promise is the most frequently used feature in javascript (i think so)
 
+## Testing
+Also, part of tests are being run with [native](./src/factory/index.js#L130) promise implementation
+
 ## Get started
 To install deps:
 ```shell
