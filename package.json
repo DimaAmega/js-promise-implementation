@@ -10,11 +10,13 @@
   "scripts": {
     "prepare": "husky install",
     "watch:test": "nodemon --exec \"yarn format && yarn test\" -e js --watch ./src --watch ./tests",
-    "test": "yarn test:code && yarn jest --coverage",
+    "test-full": "yarn test:code && yarn test:jest --coverage && yarn test:jest:native-promises",
     "jest": "yarn node --experimental-vm-modules ./node_modules/.bin/jest",
     "format": "yarn format:code",
     "format:code": "prettier -w .",
-    "test:code": "eslint --ignore-path .gitignore --ignore-path .prettierignore --ext .js,.jsx ."
+    "test:code": "eslint --ignore-path .gitignore --ignore-path .prettierignore --ext .js,.jsx .",
+    "test:jest": "yarn jest",
+    "test:jest:native-promises": "NATIVE_PROMISES=true yarn test:jest"
   },
   "keywords": [],
   "author": "",

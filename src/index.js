@@ -1,3 +1,5 @@
 import PromiseFactory from './factory'
 
-export default PromiseFactory()
+export const Promise = PromiseFactory({
+  isUseNativePromises: process.env.NATIVE_PROMISES === 'true',
+})

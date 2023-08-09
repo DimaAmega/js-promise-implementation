@@ -1,4 +1,4 @@
-import Promise from '../src'
+import { Promise } from '../src'
 
 const sleepGood = ms => new Promise(resolve => setTimeout(resolve, ms, ms))
 

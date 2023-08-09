@@ -1,7 +1,9 @@
 import PROMISE_STATES from '../src/configs/promise-states'
-import Promise from '../src'
+import { Promise } from '../src'
 
-test('Promise have to invoke callback immediately', () => {
+const testIf = condition => (condition ? test : test.skip)
+
+testIf(Promise.__custom)('Promise have to invoke callback immediately', () => {
   let cbInvoked = false
   new Promise(() => (cbInvoked = true))
   expect(cbInvoked).toBe(true)
@@ -13,36 +15,46 @@ test('Promise have to invoke callback with two args', () => {
   expect(argsCount).toEqual(2)
 })
 
-test('Promise with no async cb have to be in fulfilled state', () => {
-  const promise = Promise.resolve(123)
-  expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
-  expect(promise.value).toEqual(123)
-})
+testIf(Promise.__custom)(
+  'Promise with no async cb have to be in fulfilled state',
+  () => {
+    const promise = Promise.resolve(123)
+    expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
 
-test('Promise with no async cb have to be in rejected state', () => {
-  const error = new Error('rejected')
-  const promise = Promise.reject(error)
-  expect(promise.state).toBe(PROMISE_STATES.Rejected)
-  expect(promise.error).toBe(error)
-  expect(promise.value).toEqual(undefined)
-})
+    expect(promise.value).toEqual(123)
+  },
+)
 
-test('Promise with no async cb but with explicit exception have \
-      to be in rejected state', () => {
-  const error = new Error('rejected')
-  let promise = undefined
+testIf(Promise.__custom)(
+  'Promise with no async cb have to be in rejected state',
+  () => {
+    const error = new Error('rejected')
+    const promise = Promise.reject(error)
+    expect(promise.state).toBe(PROMISE_STATES.Rejected)
+    expect(promise.error).toBe(error)
+    expect(promise.value).toEqual(undefined)
+  },
+)
 
-  expect(() => {
-    promise = new Promise(() => {
-      throw error
-    })
-  }).not.toThrow(error)
+testIf(Promise.__custom)(
+  'Promise with no async cb but with explicit exception have \
+      to be in rejected state',
+  () => {
+    const error = new Error('rejected')
+    let promise = undefined
 
-  expect(promise.state).toBe(PROMISE_STATES.Rejected)
-  expect(promise.error).toEqual(error)
-})
+    expect(() => {
+      promise = new Promise(() => {
+        throw error
+      })
+    }).not.toThrow(error)
 
-test.each([12, 'string', {}, [], () => {}])(
+    expect(promise.state).toBe(PROMISE_STATES.Rejected)
+    expect(promise.error).toEqual(error)
+  },
+)
+
+testIf(Promise.__custom).each([12, 'string', {}, [], () => {}])(
   'Promise with no async cb have to be in fulfilled state \
 with value: %p',
   value => {

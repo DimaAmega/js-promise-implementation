@@ -1,4 +1,4 @@
-import Promise from '../src'
+import { Promise } from '../src'
 
 test('finally sync resolve ignore returned value', done => {
   let isTouched = false
