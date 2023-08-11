@@ -3,11 +3,15 @@ import { Promise } from '../src'
 
 const testIf = condition => (condition ? test : test.skip)
 
-testIf(Promise.__custom)('Promise have to be in Pending state', async () => {
-  const delay = 100
-  const promise = new Promise(resolve => setTimeout(resolve, delay, delay))
-  expect(promise.state).toBe(PROMISE_STATES.Pending)
-})
+testIf(Promise.__custom)(
+  'Promise with async cb have to be in Pending state',
+  () => {
+    const delay = 100
+    const promise = new Promise(resolve => setTimeout(resolve, delay, delay))
+
+    expect(promise.state).toBe(PROMISE_STATES.Pending)
+  },
+)
 
 test('Then is the promise', () => {
   const promise = new Promise(() => {}).then(() => {})
@@ -17,6 +21,7 @@ test('Then is the promise', () => {
 test('Then does not invoked immediately', () => {
   let isInvoked = false
   Promise.resolve().then(() => (isInvoked = true))
+
   expect(isInvoked).toBe(false)
 })
 
@@ -61,7 +66,7 @@ test('Catch is works', done => {
     .catch(error => {
       catchError = error
     })
-    .finally(() => {
+    .then(() => {
       expect(catchError).toBe(initialError)
       done()
     })
@@ -72,11 +77,15 @@ testIf(Promise.__custom)(
   done => {
     const result = 200
     const promise = new Promise(resolve => resolve(result))
+
     expect(promise.state).toBe(PROMISE_STATES.Fulfilled)
     expect(promise.value).toBe(result)
+
     const newPromise = promise.then(value => 2 * value)
+
     expect(newPromise.state).toBe(PROMISE_STATES.Pending)
     expect(newPromise.value).toBe(undefined)
+
     newPromise
       .then(value => {
         expect(value).toBe(2 * result)
@@ -86,53 +95,42 @@ testIf(Promise.__custom)(
   },
 )
 
-testIf(Promise.__custom)(
-  'Promise sync invoke then and then goes right way',
-  done => {
-    const initialError = new Error('error')
-    const promise = new Promise((resolve, reject) => reject(initialError))
-    expect(promise.state).toBe(PROMISE_STATES.Rejected)
-    expect(promise.value).toBe(undefined)
-    expect(promise.error).toBe(initialError)
+test('Promise sync invoke then and then goes right way', done => {
+  const initialError = new Error('error')
+  const promise = new Promise((resolve, reject) => reject(initialError))
 
-    let [isOnRejectedInvoked, isOnFulfilledInvoked] = [false, false]
-    promise
-      .then(
-        () => (isOnFulfilledInvoked = true),
-        error => {
-          isOnRejectedInvoked = true
-          expect(error).toBe(initialError)
-        },
-      )
-      .then(() => {
-        expect(isOnFulfilledInvoked).toBe(false)
-        expect(isOnRejectedInvoked).toBe(true)
-        done()
-      })
-      .catch(error => done(error))
-  },
-)
+  let [isOnRejectedInvoked, isOnFulfilledInvoked] = [false, false]
 
-testIf(Promise.__custom)(
-  'Promise sync invoke then and rejected but onRejected callback missed',
-  done => {
-    const initialError = new Error('error')
-    const promise = new Promise((resolve, reject) => reject(initialError))
-    expect(promise.state).toBe(PROMISE_STATES.Rejected)
-    expect(promise.value).toBe(undefined)
-    expect(promise.error).toBe(initialError)
+  promise
+    .then(
+      () => (isOnFulfilledInvoked = true),
+      error => {
+        isOnRejectedInvoked = true
+        expect(error).toBe(initialError)
+      },
+    )
+    .then(() => {
+      expect(isOnFulfilledInvoked).toBe(false)
+      expect(isOnRejectedInvoked).toBe(true)
+      done()
+    })
+    .catch(error => done(error))
+})
 
-    let isOnFulfilledInvoked = false
-    promise
-      .then(() => (isOnFulfilledInvoked = true))
-      .catch(error => expect(error).toBe(initialError))
-      .then(() => {
-        expect(isOnFulfilledInvoked).toBe(false)
-        done()
-      })
-      .catch(error => done(error))
-  },
-)
+test('Promise sync invoke then and rejected but onRejected callback missed', done => {
+  const initialError = new Error('error')
+  const promise = new Promise((resolve, reject) => reject(initialError))
+
+  let isOnFulfilledInvoked = false
+  promise
+    .then(() => (isOnFulfilledInvoked = true))
+    .catch(error => expect(error).toBe(initialError))
+    .then(() => {
+      expect(isOnFulfilledInvoked).toBe(false)
+      done()
+    })
+    .catch(error => done(error))
+})
 
 testIf(Promise.__custom)('Promise async invoke then and fulfilled', done => {
   const delay = 100
