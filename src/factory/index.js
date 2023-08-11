@@ -59,6 +59,7 @@ class PromiseImpl {
               continue
             }
           }
+
           if (this.state == PROMISE_STATES.Rejected) {
             cb = onRejectedCb
             value = this.error
@@ -75,16 +76,16 @@ class PromiseImpl {
             reject(error)
             continue
           }
+
           if (valueOrPromise instanceof PromiseImpl) {
-            valueOrPromise.then(
-              result => resolve(result),
-              error => reject(error),
-            )
-          } else {
-            const clearValue = valueOrPromise
-            resolve(clearValue)
+            valueOrPromise.then(resolve, reject)
+            continue
           }
+
+          // not instanceof PromiseImpl, means value
+          resolve(valueOrPromise)
         }
+
         this.waiters = []
         break
     }
