@@ -12,8 +12,8 @@ class PromiseImpl {
   }
 
   constructor(cb) {
-    if (cb == undefined || typeof cb !== 'function') {
-      throw new Error(ERRORS.missedCallback)
+    if (typeof cb !== 'function') {
+      throw new Error(ERRORS.missedCallback(cb))
     }
     this.waiters = []
     this.state = PROMISE_STATES.Pending
