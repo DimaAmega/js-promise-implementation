@@ -19,19 +19,19 @@ class PromiseImpl {
     this.state = PROMISE_STATES.Pending
     // invoke the callback
     try {
-      cb(v => this.#resolveFunction(v), e => this.#rejectFunction(e))
+      cb(value => this.#resolveFun(value), error => this.#rejectFun(error))
     } catch (error) {
       this.#rejectFunction(error)
     }
   }
 
-  #resolveFunction(value) {
+  #resolveFun(value) {
     this.value = value
     this.state = PROMISE_STATES.Fulfilled
     this.#serveWaiters()
   }
 
-  #rejectFunction(error) {
+  #rejectFun(error) {
     this.error = error
     this.state = PROMISE_STATES.Rejected
     this.#serveWaiters()
