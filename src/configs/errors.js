@@ -1,13 +1,13 @@
 const ERRORS = {
-  missedCallback: obj =>
+  missedCallback: cb =>
     `Promise resolver ${
-      obj instanceof Error
-        ? obj.toString()
-        : Array.isArray(obj)
+      cb instanceof Error
+        ? cb.toString()
+        : Array.isArray(cb)
         ? `[object Array]`
-        : obj instanceof Object
+        : cb instanceof Object
         ? `#<Object>`
-        : obj && obj.toString && obj.toString()
+        : cb && cb.toString && cb.toString()
     } is not a function`,
 }
 
